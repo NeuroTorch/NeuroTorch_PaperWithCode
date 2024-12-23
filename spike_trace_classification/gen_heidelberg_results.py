@@ -43,8 +43,6 @@ if __name__ == '__main__':
 	
 	checkpoint_folder = f"./checkpoints/heidelberg_{learning_algorithm}_{dynamic_type.__name__}"
 	checkpoint_manager = CheckpointManager(
-		# checkpoint_folder, save_best_only=True,
-		# checkpoint_folder, metric="val_accuracy", minimise_metric=False, save_best_only=True,
 		checkpoint_folder, metric="train_loss", minimise_metric=True, save_best_only=True,
 		start_save_at=int(n_iterations * 0.9)
 	)
@@ -76,7 +74,6 @@ if __name__ == '__main__':
 	callbacks = [
 		checkpoint_manager,
 		make_learning_algorithm(learning_algorithm=learning_algorithm, learning_rate=learning_rate, network=network),
-		# nt.BPTT(optimizer=torch.optim.AdamW(network.parameters(), lr=learning_rate, weight_decay=0.0)),
 	]
 	trainer = ClassificationTrainer(
 		model=network,
@@ -86,7 +83,6 @@ if __name__ == '__main__':
 	print(trainer)
 	training_history = trainer.train(
 		dataloaders["train"],
-		# dataloaders["val"],
 		n_iterations=n_iterations,
 		load_checkpoint_mode=LoadCheckpointMode.LAST_ITR,
 		force_overwrite=force_overwrite,
