@@ -807,7 +807,7 @@ if __name__ == '__main__':
         "n_pts": 100,
         "n_seed": 32,
         "n_test": 32,
-        "nb_workers": max(0, psutil.cpu_count(logical=False) - 4),
+        "nb_workers": min(4, psutil.cpu_count(logical=False)),
         # "nb_workers": 0,
     })
     print("sys_kwgs:\n", json.dumps(sys_kwgs, indent=4), "\n")
