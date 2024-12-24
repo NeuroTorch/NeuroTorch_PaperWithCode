@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import neurotorch as nt
 import numpy as np
 import pandas as pd
+import psutil
 import pythonbasictools as pbt
 from scipy import stats
 
@@ -728,7 +729,7 @@ def resilience_analyse_report_graph(
         savefig_filenames = [f"{save_name}.{ext}" for ext in ext_list]
         original_fig_dir = _save_figures(fig, model_objects_list[0], savefig_filenames)
         print(f"Figures saved in {original_fig_dir}")
-        pbt.multiprocessing.apply_func_multiprocess(
+        pbt.multiprocessing_tools.apply_func_multiprocess(
             _copy_figures,
             iterable_of_args=[(m_objects, original_fig_dir, savefig_filenames) for m_objects in model_objects_list[1:]],
             desc="Saving figures",
@@ -806,8 +807,8 @@ if __name__ == '__main__':
         "n_pts": 100,
         "n_seed": 32,
         "n_test": 32,
-        # "nb_workers": max(0, psutil.cpu_count(logical=False) - 4),
-        "nb_workers": 0,
+        "nb_workers": max(0, psutil.cpu_count(logical=False) - 4),
+        # "nb_workers": 0,
     })
     print("sys_kwgs:\n", json.dumps(sys_kwgs, indent=4), "\n")
     _n_pts = int(sys_kwgs["n_pts"])
@@ -835,7 +836,6 @@ if __name__ == '__main__':
         )
         resilience_analyse_report_graph(
             _models,
-            # df=df_path if os.path.exists(df_path) else None,
             df=_df,
             ablation_strategies=["smallest_rm", "random_rm"],
             ablation_strategies_titles={
@@ -845,25 +845,10 @@ if __name__ == '__main__':
                 "random_rm": "Random connection ablations",
             },
             normalize_perf=True,
-            # x_axis_key="connection_removed",
-            # x_axis_name="Connection removed [-]",
             nb_workers=int(sys_kwgs["nb_workers"]),
             save_name=f"resilience_report_p{_n_pts}_t{_n_test}_s{_n_seed}",
             show=True,
         )
-        # plot_all_resilience_analyse_report_graph(
-        #     _models,
-        #     df=_df,
-        #     ablation_strategies_titles={
-        #         "smallest": "Hierarchical connection ablations",
-        #         "random": "Random connection ablations",
-        #     },
-        #     normalize_perf=False,
-        #     nb_workers=int(sys_kwgs["nb_workers"]),
-        #     save_name=f"resilience_report_all_p{_n_pts}_t{_n_test}_s{_n_seed}",
-        #     save=True,
-        #     show=True,
-        # )
     except Exception as e:
         if is_running_in_terminal:
             print(e)
