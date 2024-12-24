@@ -50,7 +50,10 @@ def main(
 	p_bar = tqdm(
 		range(n_pts * len(learning_algorithms_2_args) * len(model_types)),
 		desc="Running experiments", unit="exp",
-		initial=len(df),
+		initial=len([
+			i for i in range(n_pts) for model_type in model_types for la in learning_algorithms_2_args
+			if i not in df[(df["info"] == la) & (df["model_type"] == model_type.name)]["info_idx"].values
+		]),
 	)
 	for la, la_args in learning_algorithms_2_args.items():
 		for model_type in model_types:
