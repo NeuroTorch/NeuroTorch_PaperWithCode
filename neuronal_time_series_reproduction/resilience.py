@@ -129,7 +129,7 @@ def compute_resilience_analyse_on_models_df(
                 ))
                 args_list.append((m_objects["model"], layers[i], m_objects["dataloader"]))
                 out_model_objects_list.append(m_objects)
-    new_df_list = pbt.multiprocessing.apply_func_multiprocess(
+    new_df_list = pbt.multiprocessing_tools.apply_func_multiprocess(
         ablation_on_layer_,
         iterable_of_args=args_list,
         iterable_of_kwargs=kwgs_list,
@@ -802,9 +802,9 @@ if __name__ == '__main__':
 
     is_running_in_terminal = sys.stdout.isatty()
     sys_kwgs = get_cmd_kwargs({
-        1: "./data/tr_eprop_50tr_filtered",
+        1: "./data/tr_eprop_filtered",
         "n_pts": 100,
-        "n_seed": 2,
+        "n_seed": 32,
         "n_test": 32,
         # "nb_workers": max(0, psutil.cpu_count(logical=False) - 4),
         "nb_workers": 0,
