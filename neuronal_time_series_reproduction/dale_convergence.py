@@ -52,7 +52,7 @@ def main(
 		desc="Running experiments", unit="exp",
 		initial=len([
 			i for i in range(n_pts) for model_type in model_types for la in learning_algorithms_2_args
-			if i not in df[(df["info"] == la) & (df["model_type"] == model_type.name)]["info_idx"].values
+			if i in df[(df["info"] == la) & (df["model_type"] == model_type.name)]["info_idx"].values
 		]),
 	)
 	for la, la_args in learning_algorithms_2_args.items():
@@ -186,6 +186,7 @@ if __name__ == '__main__':
 
 	sys_kwgs = {i: v for i, v in enumerate(sys.argv)}
 	output_tr_data_folder = sys_kwgs.get(1, "data/tr_eprop")
+	os.makedirs(output_tr_data_folder, exist_ok=True)
 	_n_pts = int(sys_kwgs.get(2, 20))
 
 	is_running_in_terminal = sys.stdout.isatty()
