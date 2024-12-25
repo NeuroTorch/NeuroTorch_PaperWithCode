@@ -22,22 +22,23 @@ import os
 import argparse
 from typing import List
 import pythonbasictools as pbt
-from neuronal_time_series_reproduction.resilience import resilience_analyse_on_models
+import json
 
 
 def get_parser():
     parser = argparse.ArgumentParser(description=__doc__)
+
     parser.add_argument(
         "--venv",
         type=str,
-        default="../venv",
+        default=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "venv")),
         help="Path to the virtual environment folder.",
     )
     parser.add_argument(
         "--nb_workers",
         type=int,
         default=0,
-        help="Number of workers to use in the multiprocessing functions.",
+        help="Number of workers to use for running the scripts.",
     )
     return parser
 
@@ -53,6 +54,9 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
+    print(f"Running scripts with the following arguments:")
+    print(json.dumps(vars(args), indent=4))
+
     python_path = os.path.join(args.venv, "Scripts", "python")
     if not os.path.exists(python_path):
         python_path = os.path.join(args.venv, "bin", "python")
@@ -67,7 +71,7 @@ def main():
         "_filter_models.py",
         "resilience.py",
     ]
-    
+
     eprop_cmds = [f"{python_path} {os.path.join(dir_path, script)}" for script in eprop_scripts]
     resilience_cmds = [f"{python_path} {os.path.join(dir_path, script)}" for script in resilience_scripts]
 
