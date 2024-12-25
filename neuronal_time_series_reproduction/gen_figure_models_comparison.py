@@ -1,26 +1,18 @@
 import json
 import os
+import pickle
 import shutil
 from copy import deepcopy
 
+import matplotlib
 import neurotorch as nt
 import numpy as np
-import pandas as pd
-import torch
-from neurotorch.callbacks.convergence import ConvergenceTimeGetter
-from neurotorch.regularization.connectome import ExcRatioTargetRegularization
 from pythonbasictools import logs_file_setup, log_device_setup, DeepLib
-import matplotlib
-import pickle
-
-from torch.utils.data import DataLoader
 
 from dataset import get_dataloader, TimeSeriesDataset
-from models import get_model, ModelType
-from neuronal_time_series_reproduction.reports.data_report_analysis import get_bests_by_key
-from utils import load_model, gather_model_from_path, return_default_on_except, maybe_to_numpy
-from train_script import train, set_trainer_default_params, test_model, get_exc_ratios
 from figures_script import complete_report, plot_model_comparison, plot_simple_report
+from train_script import test_model, get_exc_ratios
+from utils import gather_model_from_path, return_default_on_except
 
 
 def load_or_compute_test_prediction(model: nt.SequentialRNN, dataset: TimeSeriesDataset, **kwargs):
@@ -124,6 +116,7 @@ def main(snn_path: str, wc_path: str, **kwargs):
 
 if __name__ == '__main__':
     import sys
+
     logs_file_setup(sys.argv[0].replace('.', '_'), add_stdout=False)
     log_device_setup(deepLib=DeepLib.Pytorch)
     # model_test_from_path(
@@ -146,6 +139,3 @@ if __name__ == '__main__':
     #     model_dict["model"], model_dict["dataloader"].dataset
     # )
     # plot_simple_report(model_dict["model"], y_pred=y_pred, y_target=y_target, show=True)
-
-
-
