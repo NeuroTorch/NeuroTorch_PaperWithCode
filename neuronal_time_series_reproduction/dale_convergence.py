@@ -187,7 +187,7 @@ if __name__ == '__main__':
 	sys_kwgs = {i: v for i, v in enumerate(sys.argv)}
 	output_tr_data_folder = sys_kwgs.get(1, "data/tr_eprop")
 	os.makedirs(output_tr_data_folder, exist_ok=True)
-	_n_pts = int(sys_kwgs.get(2, 20))
+	_n_pts = int(sys_kwgs.get(2, 25))
 
 	is_running_in_terminal = sys.stdout.isatty()
 	try:
