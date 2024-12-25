@@ -45,6 +45,7 @@ def get_parser():
 
 def run_cmds(cmds: List[str]):
     for cmd in cmds:
+        print(f"Running command: {cmd}")
         os.system(cmd)
     return 0
 
@@ -57,9 +58,11 @@ def main():
     print(f"Running scripts with the following arguments:")
     print(json.dumps(vars(args), indent=4))
 
-    python_path = os.path.join(args.venv, "Scripts", "python")
+    python_path = os.path.join(args.venv, "Scripts", "python.exe")
     if not os.path.exists(python_path):
         python_path = os.path.join(args.venv, "bin", "python")
+    if not os.path.exists(python_path):
+        raise FileNotFoundError(f"Python path not found: {python_path}")
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     eprop_scripts = [
