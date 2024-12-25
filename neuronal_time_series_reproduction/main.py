@@ -19,18 +19,69 @@ Note that all the scripts are seeded for reproducibility. However, the results m
 numerical precision of the machine.
 """
 import os
+import argparse
+from typing import List
+import pythonbasictools as pbt
+from neuronal_time_series_reproduction.resilience import resilience_analyse_on_models
+
+
+def get_parser():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--venv",
+        type=str,
+        default="../venv",
+        help="Path to the virtual environment folder.",
+    )
+    parser.add_argument(
+        "--nb_workers",
+        type=int,
+        default=0,
+        help="Number of workers to use in the multiprocessing functions.",
+    )
+    return parser
+
+
+def run_cmds(cmds: List[str]):
+    for cmd in cmds:
+        os.system(cmd)
+    return 0
+
+
+
+def main():
+    parser = get_parser()
+    args = parser.parse_args()
+
+    python_path = os.path.join(args.venv, "Scripts", "python")
+    if not os.path.exists(python_path):
+        python_path = os.path.join(args.venv, "bin", "python")
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    eprop_scripts = [
+        "eprop_training.py",
+        "gen_figure_models_comparison.py",
+    ]
+    resilience_scripts = [
+        "dale_convergence.py",
+        "_filter_models.py",
+        "resilience.py",
+    ]
+    
+    eprop_cmds = [f"{python_path} {os.path.join(dir_path, script)}" for script in eprop_scripts]
+    resilience_cmds = [f"{python_path} {os.path.join(dir_path, script)}" for script in resilience_scripts]
+
+    pbt.multiprocessing_tools.apply_func_multiprocess(
+        run_cmds,
+        iterable_of_args=[(eprop_cmds, ), (resilience_cmds, )],
+        desc="Running scripts",
+        nb_workers=args.nb_workers,
+    )
+    return 0
 
 
 if __name__ == '__main__':
-    venv = "../venv"
-    python_path = os.path.join(venv, "Scripts", "python")
-    if not os.path.exists(python_path):
-        python_path = os.path.join(venv, "bin", "python")
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.system(f"{python_path} {os.path.join(dir_path, 'eprop_training.py')}")
-    os.system(f"{python_path} {os.path.join(dir_path, 'gen_figure_models_comparison.py')}")
-    os.system(f"{python_path} {os.path.join(dir_path, 'dale_convergence.py')}")
-    os.system(f"{python_path} {os.path.join(dir_path, '_filter_models.py')}")
-    os.system(f"{python_path} {os.path.join(dir_path, 'resilience.py')}")
+    exit(main())
+
 
 
