@@ -98,8 +98,12 @@ def _make_model_copy(model_dict: Dict[str, Any], location: str):
 def copy_models_in_folder(
     model_objects_list: List[Dict[str, Any]],
     location: str,
+    clear_location: bool = True,
     **kwargs
 ):
+    if clear_location:
+        shutil.rmtree(location, ignore_errors=True)
+    os.makedirs(location, exist_ok=True)
     model_objects_list = pbt.multiprocessing_tools.apply_func_multiprocess(
         _make_model_copy,
         iterable_of_args=[(m, location) for m in model_objects_list],
@@ -134,6 +138,7 @@ if __name__ == '__main__':
         _m_list = copy_models_in_folder(
             _m_list,
             location=f"{data_root}_filtered",
+            clear_location=True,
             nb_workers=max(0, psutil.cpu_count(logical=False)),
         )
     except Exception as e:
