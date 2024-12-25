@@ -62,7 +62,13 @@ def main():
     if not os.path.exists(python_path):
         python_path = os.path.join(args.venv, "bin", "python")
     if not os.path.exists(python_path):
-        raise FileNotFoundError(f"Python path not found: {python_path}")
+        raise FileNotFoundError(
+            f"Python path not found: {python_path}. "
+            f"Please create the virtual environment and install the dependencies."
+            f"You can do this by running the following commands:\n"
+            f"python -m venv {args.venv}\n"
+            f"{python_path} -m pip install -r requirements.txt"
+        )
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     eprop_scripts = [
