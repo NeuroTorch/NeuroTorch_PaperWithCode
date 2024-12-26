@@ -15,8 +15,8 @@ class TimeSeriesDataset(Dataset):
 	ROOT_FOLDER = "data/ts/"
 	FILE_ID_NAME = {
 		"SampleZebrafishData_PaulDeKoninckLab_2020-12-16.npy": "1-3jgAZiNU__NxxhXub7ezAJUqDMFpMCO",
-		"Stimulus_data_2022_02_23_fish3_1.npy": "19DnsoI_z4IAWGSLP-32JR4rEMMBMp2Gf",
-		"Stimulus_data_2022_02_23_fish3_1.hdf5": "1rliot_adOAYMzHZjoKrIAJuXnxTmwIpX",
+		"Stimulus_data_2022_02_23_fish3_1.npy": "1gFXl4yD6fT-NGEZkSkuYU2E5yz_rxMPy",
+		"Stimulus_data_2022_02_23_fish3_1.hdf5": "1Qn82eUwM39lJagl4Qn_so0xEpI5r61mF",
 	}
 	
 	def __init__(
