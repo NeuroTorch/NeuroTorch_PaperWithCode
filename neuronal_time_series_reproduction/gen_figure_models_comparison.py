@@ -93,9 +93,13 @@ def main(snn_path: str, wc_path: str, **kwargs):
     snn_model_dict, snn_viz_pred, snn_viz_target, snn_y_pred = model_test_from_path(snn_path, **kwargs)
 
     # Plot results
-    hdf5_params = deepcopy(wc_model_dict['params'])
-    hdf5_params["filename"] = wc_model_dict['params']["filename"].replace(".npy", ".hdf5")
-    hdf5_file = get_dataloader(verbose=False, **hdf5_params).dataset.hdf5_file
+    try:
+        hdf5_params = deepcopy(wc_model_dict['params'])
+        hdf5_params["filename"] = wc_model_dict['params']["filename"].replace(".npy", ".hdf5")
+        hdf5_file = get_dataloader(verbose=False, **hdf5_params).dataset.hdf5_file
+        timesteps = np.asarray(hdf5_file["timesteps"])
+    except Exception as e:
+        timesteps = None
     save_folder = f"{wc_model_dict['model'].checkpoint_folder}/comparison_figures"
     saved_files = plot_model_comparison(
         model0=wc_model_dict['model'], model1=snn_model_dict['model'],
@@ -103,7 +107,7 @@ def main(snn_path: str, wc_path: str, **kwargs):
         visualise0=wc_viz_pred, visualise1=snn_viz_pred,
         visualise_target=wc_viz_target,
         save_folder=save_folder,
-        timesteps=np.asarray(hdf5_file["timesteps"]),
+        timesteps=timesteps,
         show=False,
     )
     snn_dest_folder = os.path.join(snn_model_dict['model'].checkpoint_folder, "comparison_figures")
