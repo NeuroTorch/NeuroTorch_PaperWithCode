@@ -86,6 +86,7 @@ def model_test_from_path(model_path: str, **kwargs):
 
 
 def main(snn_path: str, wc_path: str, **kwargs):
+    kwargs.setdefault("n_test", 32)
     matplotlib.use('Agg')
     # Wilson-Cowan
     wc_model_dict, wc_viz_pred, wc_viz_target, wc_y_pred = model_test_from_path(wc_path, **kwargs)
@@ -123,23 +124,14 @@ if __name__ == '__main__':
 
     logs_file_setup(sys.argv[0].replace('.', '_'), add_stdout=False)
     log_device_setup(deepLib=DeepLib.Pytorch)
-    # model_test_from_path(
-    #     model_path="./data/tr_eprop_dff_N1644_bs1_075pvar/ckpt_snn_lpf_dff_matrix_1644_npy_eprop_dale_0"
-    # )
-    # model_test_from_path(
-    #     model_path="./data/tr_eprop_dff_N1644_T1000_bs1_075pvar_714sigma/ckpt_snn_lpf_dff_matrix_1000timesteps_npy_eprop_dale_0"
-    # )
+
     _data_root = "./data/tr_eprop_Stimulus_data_2022_02_23_fish3_1"
     main(
         snn_path=os.path.join(_data_root, "ckpt_snn_lpf_Stimulus_data_2022_02_23_fish3_1_npy_eprop_dale_0"),
         wc_path=os.path.join(_data_root, "ckpt_wilson_cowan_Stimulus_data_2022_02_23_fish3_1_npy_eprop_dale_0"),
     )
+    main(
+        snn_path=os.path.join(_data_root, "ckpt_snn_lpf_Stimulus_data_2022_02_23_fish3_1_npy_eprop_0"),
+        wc_path=os.path.join(_data_root, "ckpt_wilson_cowan_Stimulus_data_2022_02_23_fish3_1_npy_eprop_0"),
+    )
 
-    # model_dict = gather_model_from_path(
-    #     model_path="./data/tr_data/sigma10/eprop_dale/ckpt_snn_lpf_Stimulus_data_2022_02_23_fish3_1_npy",
-    #     raise_exception=True
-    # )
-    # y_pred, y_target, pvar, pvar_mean, pvar_std = load_or_compute_test_prediction(
-    #     model_dict["model"], model_dict["dataloader"].dataset
-    # )
-    # plot_simple_report(model_dict["model"], y_pred=y_pred, y_target=y_target, show=True)
